@@ -1,0 +1,86 @@
+<div>
+  <img src="img/slider/home-3/home-banner/2.jpg" alt="" height="60px" width="100%"/>
+</div>
+<header class="header header--1" data-sticky="true">
+    <div class="header__top">
+        <div class="ps-container">
+            <div class="header__left">
+                <div><h2 style=" font-family: 'Arial', sans-serif; /* Chọn font chữ */
+                color: #007bff; /* Màu sắc của logo */
+                font-size: 30px; /* Kích thước của chữ */
+                font-weight: bold; /* Làm đậm chữ */
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Thêm bóng đổ cho chữ */
+                padding: 0px 10px; /* Đệm xung quanh chữ */
+                border: 2px solid #007bff; /* Viền xung quanh logo */
+                border-radius: 10px; /* Bo tròn góc của viền */
+                background-color: white; /* Màu nền */
+                display: inline-block; /* Hiển thị như một khối */
+                transition: all 0.3s ease; /* Thêm hiệu ứng chuyển đổi */">XShop</h2>
+              </div>
+                
+            </div>
+            <div class="header__center">
+                <form class="ps-form--quick-search" action="#" method="get">
+                    <input class="form-control" (keyup)="search($event)" type="text" placeholder="Tìm kiếm theo tên sản phẩm..." id="input-search" />
+                    <button [routerLink]="['/search/'+keyword]">Tìm</button>
+                </form>
+            </div>
+            <div class="header__right">
+                <div class="header__actions">
+                    <!-- wishlist -->
+                    <a class="header__extra" [routerLink]="['/favorites']" aa>
+                        <i class="icon-heart" aaaaaaaaaaaaaaaa></i>
+                        <span>
+                            <i>{{totalFavoriteItem}}</i>
+                        </span>
+                    </a>
+                    <a class="header__extra" [routerLink]="['/cart']">
+                        <i class="icon-bag2"></i>
+                        <span>
+                            <i>{{totalCartItem}}</i>
+                        </span>
+                    </a>
+                    <div class="ps-block--user-header">
+                        <div class="menu--product-categories">
+                            <div class="ps-block__left">
+                                <a class="header__extra" href="javascript:void(0);">
+                                    <i class="icon-user"></i>
+                                </a>
+                            </div>
+                            <div class="menu__content" style="left: -100%;">
+                                <ul class="menu--dropdown">
+                                  <li *ngIf="isLogin">
+                                    <a [routerLink]="['/profile']">Thông tin</a>
+                                  </li>
+                                    <li *ngIf="isLogin">
+                                        <a [routerLink]="['/bill']">Đơn hàng</a>
+                                    </li>
+                                    <li *ngIf="!isLogin">
+                                        <a [routerLink]="['/sign-form']">Đăng nhập &amp; Đăng ký</a>
+                                    </li>
+                                    <li *ngIf="isLogin">
+                                        <a href="javascript:void(0);" (click)="logout()">Đăng xuất</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="navigation">
+        <div class="ps-container">
+           
+            <div class="navigation__right" style="margin-left: 500px; font-size: 90px;">
+                <ul class="menu" >
+                    <li class="menu-item"><a [routerLink]="['/home']">Trang chủ</a></li>
+                    <li class="menu-item"><a [routerLink]="['/all-product']">Cửa hàng</a></li>
+                    <li class="menu-item"><a [routerLink]="['/about']">Giới thiệu</a></li>
+                    <li class="menu-item"><a [routerLink]="['/contact']">Liên hệ</a></li>
+                    <li class="menu-item" *ngIf="!isLogin"><a [routerLink]="['/sign-form']">Đăng nhập &amp; Đăng ký</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>

@@ -1,0 +1,138 @@
+<div class="ps-page--simple">
+    <div class="ps-breadcrumb">
+        <div class="container">
+            <ul class="breadcrumb">
+                <li><a [routerLink]="['/home']">Trang chủ</a></li>
+                <li><a [routerLink]="['/all-product']">Cửa hàng</a></li>
+                <li>Giỏ hàng</li>
+            </ul>
+        </div>
+    </div>
+    <div class="ps-section__cart-actions mt-2">
+      <a class="ps-btn" [routerLink]="['/all-product']">
+        <i class="icon-arrow-left"></i> Quay lại cửa hàng</a>
+    </div>
+    <div class="ps-section--shopping ps-shopping-cart p-5">
+        <div class="container">
+            <div class="ps-section__header p-2">
+                <h1>Giỏ Hàng</h1>
+                    <div class="row mt-5 mb-5" *ngIf="cartDetails.length==0">
+                      <div class="col-8 offset-2 text-center">
+                        <h2 style="color: #fcb800;">Giỏ hàng trống</h2>
+                        <h2 style="color: #fcb800;;">Hãy chọn 1 vài sản phẩm vào giỏ hàng của bạn.</h2>
+                      </div>
+                    </div>
+            </div>
+            <div class="ps-section__content">
+                <div class="table-responsive" *ngIf="cartDetails.length>0">
+                    <div class="table-responsive" >
+
+                        <h4 style="color: #05a">Tổng số: {{cartDetails.length}} Sản phẩm</h4>
+                    <table class="table ps-table--shopping-cart ps-table--responsive">
+
+                        <thead>
+                            <tr>
+                               <th><input style="text-align: center;width: 25px;height: 25px;" (change)="checkAll($event)" type="checkbox" id="selectAllProduct"></th>
+
+                                <th>Sản phẩm</th>
+                                <th>Giá</th>
+                                <th>Số lượng</th>
+                                <th>Số lượng còn</th>
+                                <th>Tổng tiền</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                          <style>
+                            .hethang {
+                                border: 1px solid yellow;
+                                background-color: rgb(193, 193, 66);
+                            }
+                            .ngungkd{
+                               border: 1px solid rgb(217, 62, 62)  !important;
+                              background-color: #ca0c0ce0  !important;
+                            }
+                             .ok{
+                               border: 1px solid rgb(54, 191, 97);
+                              background-color: green;
+                            }
+                          </style>
+
+                            <tr *ngFor="let item of cartDetails, index as i">
+                               <td  [ngClass]="{'hethang':item.productDetail.amount == 0,'ngungkd':item.productDetail.type == 0||item.productDetail.product.type == 0,'ok':item.productDetail.quantity<=item.productDetail.amount}" ><input style="text-align: center;width: 20px;height: 20px;" #selectProduct type="checkbox" (change)="checkProduct()" [value]="item.productDetail.id"></td>
+                                <td data-label="Product">
+                                    <div class="ps-product--cart">
+
+                                      <div class="ps-product__thumbnail">
+
+                                          <div style="display: flex; justify-content: center ; " class="thumbnail-clickable" data-toggle="modal"
+                                            data-target="#imageModal" (click)="showLargeImage($event)">
+                                            <img style="aspect-ratio: 3/4;object-fit: cover;cursor: pointer;"
+                                              src="http://localhost:8080/product/{{item.productDetail.product.id}}/image-main">
+                                          </div>
+
+                                      </div>
+                                        <div class="ps-product__content" style="font-size: 19px;">
+                                            <a [routerLink]="['/product-detail/'+item.productDetail.product.id]" style="font-size:25px;">{{item.productDetail.product.name}}</a>
+                                            <p style="font-size: 17px;">Thể loại:<strong> {{item.productDetail.product.category.name}}</strong></p>
+                                            <p style="font-size: 17px;">Màu sắc:<strong> {{item.productDetail.color.name}}</strong>   |   Size:<strong style="font-weight: bold; "> {{item.productDetail.size.size}}</strong></p>
+                                        </div>
+                                    </div>
+                                </td>
+
+
+                                <td style="text-align: center;font-size:22px" class="price" data-label="Price">
+                                    {{item.productDetail.price|currency:'VND'}}
+                                </td>
+
+
+                                <td data-label="Quantity" style="text-align: center;">
+                                    <input (change)="changeQuantity($event,item)"
+                                    style="text-align: center; width: 50%; font-size: 24px;"
+                                    type="number"
+                                    min="1"
+                                    [value]="item.productDetail.quantity||1"
+                                    placeholder="0"
+                                    name="quantity"
+                                    [(ngModel)]="item.productDetail.quantity"/></td>
+                                  <td>{{item.productDetail.amount|number}}</td>
+                                <td style="text-align: center;font-size:22px" data-label="Total">
+                                    {{item.productDetail.price * item.productDetail.quantity| currency:'VND'}}
+                                </td>
+
+                                <td style="text-align: center; font-size:22px" data-label="Actions">
+                                    <a style="text-align: center; font-size:32px"  (click)="delete(item.cartDetailId)"><i class="icon-cross"></i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+                        <!-- Modal cho ảnh lớn -->
+                        <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-lg">
+                            <div class="center-image" style="display: flex; justify-content:center;align-items:center;">
+                              <div class="modal-body">
+                                <img *ngIf="largeImageUrl" style="width: 80% ; aspect-ratio: 3/4;object-fit: cover;"  [src]="largeImageUrl" class="img-fluid" alt="Large Image">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+            <div class="ps-section__footer">
+            <div class="ps-section__footer" *ngIf="cartDetails.length>0">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-12 ">
+                        <div class="ps-block--shopping-total">
+                            <div class="ps-block__content">
+                                <h3>Tổng Thanh Toán ({{productsChecked.length}} Sản Phẩm)  <span> {{totalPrice | currency:'VND'}}</span></h3>
+                            </div>
+                        </div><a class="ps-btn ps-btn--fullwidth" (click)="datHang()" style="background: #ee4d2d; color: aliceblue; font-size: 26px; font-family: Georgia, 'Times New Roman', Times, serif;">Đặt Hàng</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

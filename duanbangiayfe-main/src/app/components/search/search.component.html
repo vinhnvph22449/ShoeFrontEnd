@@ -1,0 +1,126 @@
+<div class="ps-breadcrumb">
+  <div class="ps-container">
+    <ul class="breadcrumb">
+      <li><a [routerLink]="['/home']">Trang chủ</a></li>
+      <li>Cửa hàng</li>
+      <li>Sản phẩm có từ khóa <b>"{{keyword}}"</b></li>
+    </ul>
+  </div>
+</div>
+<div class="row" style="min-height: 700px !important;" *ngIf="isLoading">
+  <div class="spinner-border text-warning" role="status" style="margin: auto; width: 6em;height: 6em;"></div>
+</div>
+
+
+<div class="row mt-5 mb-5" style="min-height: 700px !important;" *ngIf="products.data?.length == 0">
+  <div class="col-8 offset-2 text-center">
+    <h1 style="margin: auto; color: #fc5c00;">Không tìm thấy sản phẩm có từ khóa</h1> <br>
+    <strong style="font-size: 40px;">"<b>{{keyword}}</b>"</strong>
+  </div>
+</div>
+<!-- <div class="ps-page--shop" id="shop-sidebar"> -->
+<div class="ps-page--shop" id="shop-sidebar" *ngIf="!isLoading && products.data.length > 0">
+  <div class="container-fluid pl-5 pr-5">
+    <div class="ps-layout--shop">
+      <div class="">
+        <div class="ps-shopping ps-tab-root">
+          <div>
+            <img src="" alt="" />
+          </div>
+          <div class="ps-shopping__header">
+            <div class="product-page-number" style="margin: auto;">
+              <p style="font-size: 30px; padding-bottom: 20px;"> Tìm được <strong>{{products.data.length}}</strong> sản phẩm</p>
+            </div>
+            <div class="ps-shopping">
+              <select class="product-short-select custom-select ml-auto" style="font-size: 15px;" [(ngModel)]="keyF">
+                <option value="">Sản phẩm mới</option>
+              </select>
+            </div>
+          </div>
+          <div class="ps-tabs">
+            <div class="ps-tab active" id="tab-1">
+              <div class="ps-shopping-product">
+                <div class="row">
+
+                  <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-6 border border-1 ps-product"
+                    *ngFor="let item of products.data | orderBy : key : reverse | paginate: { itemsPerPage: size, currentPage: page}">
+                    <div class="p-1">
+
+                      <div class="ps-product__thumbnail">
+                        <a [routerLink]="['/product-detail/'+item.id]">
+                          <img [src]="'http://localhost:8080/product/' + item.imageId + '/image'"
+                            [alt]="item.productName" [ngClass]="{'thumbnail-image': true}">
+
+                        </a>
+
+                      </div>
+
+                        <div class="ps-product__content">
+                          <a class="ps-product__title" [routerLink]="['/product-detail/'+item.id]" style="text-align: center; font-size: 25px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">{{item.productName}}</a>
+                          <div class="ps-product__prices">
+                            <span>{{item.minPrice | currency:'VND'}}</span>
+                            <span>{{item.maxPrice | currency:'VND'}}</span>
+                          </div>
+                        </div>
+
+                        <style>
+                          .thumbnail-image {
+                              aspect-ratio: 3/4;
+                              object-fit: cover;
+                            }
+                            .ps-product__prices{
+                              display: flex;
+                              justify-content: space-between;
+                            }
+                            .ps-product__content span {
+                              font-size: 19px;
+                              color: #ee4d2d;
+                            }
+                      </style>
+
+                    </div>
+                  </div>
+                </div>
+                <!-- Phân trang -->
+                <div class="row" style="padding-top: 50px; font-size: 25px;">
+                  <div class="col-lg-12">
+
+                      <ul *ngIf="products.data.length>0">
+                          <pagination-controls
+                              (pageChange)="page = $event"
+                              previousLabel=""
+                              nextLabel=""
+                              class="text-center my-page">
+                          </pagination-controls>
+                      </ul>
+                  </div>
+              </div>
+
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+    </div>
+  </div>
+
+
+</div>
+
+
+
+<ng-template #t let-fill="fill">
+  <span class="star" [class.full]="fill === 100" style="font-size: 90%;">
+    <span class="half" [style.width.%]="fill">
+      <i class="fa fa-star"></i>
+    </span>
+    <i class="fa fa-star"></i>
+  </span>
+</ng-template>

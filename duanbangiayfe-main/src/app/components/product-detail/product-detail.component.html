@@ -1,0 +1,210 @@
+
+
+<div class="ps-breadcrumb">
+    <div class="ps-container">
+        <ul class="breadcrumb">
+            <li><a [routerLink]="['/home']">Trang chủ</a></li>
+            <li><a [routerLink]="['/all-product']">Cửa hàng</a></li>
+            <li>Chi tiết sản phẩm</li>
+        </ul>
+    </div>
+</div>
+
+<div class="row" style="min-height: 700px !important;" *ngIf="isLoading">
+    <div class="spinner-border text-success" role="status" style="margin: auto; width: 6em;height: 6em;"></div>
+</div>
+<div class="ps-page--product" *ngIf="!isLoading">
+    <div class="container-fluid pl-5 pr-5">
+        <div class="ps-page__container">
+
+            <div class="ps-page__left">
+                <div class="ps-product--detail ps-product--fullwidth">
+                    <div class="ps-product__header">
+                        <div class="ps-product__thumbnail">
+                            <figure>
+                                <div class="ps-wrapper">
+                                    <div class="ps-product__gallery">
+                                        <div class="item">
+                                                <div class="product-display">
+                                                    <div class="main-image">
+
+                                              <!-- Mã HTML cho ảnh chính -->
+
+                                              <div style="display: flex; justify-content: center ;" class="thumbnail-clickable" data-toggle="modal"
+                                                data-target="#imageModal">
+                                                <img (click)="showLargeImage($event)" style="width: 50%; aspect-ratio: 3/4;object-fit: cover;"
+                                                  src="http://localhost:8080/product/{{product.id}}/image-main">
+                                              </div>
+
+                                              <!-- Modal cho ảnh lớn -->
+                                              <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg">
+                                                  <div class="center-image" style="display: flex; justify-content:center;align-items:center;">
+                                                    <div class="modal-body">
+                                                      <img *ngIf="largeImageUrl" style="width: 80% ; aspect-ratio: 3/4;object-fit: cover;" [src]="largeImageUrl"
+                                                        class="img-fluid" alt="Large Image">
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+
+                                              <!-- Thay đổi mã HTML của carousel -->
+                                              <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig" style="height: 150px;">
+                                                <div ngxSlickItem *ngFor="let item of productImage | paginate: { itemsPerPage: 8, currentPage: 0 }" class="slide">
+                                                  <div class="border border-1">
+                                                    <div class="thumbnail-clickable" style="display: flex; justify-content:center;align-items:center;"
+                                                      data-toggle="modal" data-target="#imageModal">
+                                                      <img (click)="showLargeImage($event)" style="width: 50%; aspect-ratio: 3/4;object-fit: cover;"
+                                                        [src]="'http://localhost:8080/product/' + item + '/image'" class="thumbnail-image">
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </ngx-slick-carousel>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </figure>
+                        </div>
+
+                        <div class="ps-product__info pl-5">
+                            <span style=" font-size: 35px;">[{{product.code}}] {{product.name}}</span>
+                            <p style=" font-size: 20px;">
+                                Thương Hiệu: <a href="javascript:void(0);"><strong>{{product.brand.name}}</strong></a>
+                            </p>
+
+                            <p style="font-size: 20px;">
+                                Thể loại: <a href="javascript:void(0);"><strong>{{product.category.name}}</strong></a>
+                            </p>
+
+                            <p style=" font-size: 20px;">
+                                Loại đế: <a href="javascript:void(0);"><strong>{{product.sole.name}}</strong></a>
+                            </p>
+
+                            <p *ngIf="product.type==0" style=" font-size: 25px; color: #ee4d2d">
+                                Sản phẩm ngừng kinh doanh
+                            </p>
+
+
+                            <section class="flex items-center" style="margin-bottom: 20px; align-items: baseline;">
+                                <h3 class="oN9nMU" style="color: black;">Màu Sắc</h3>
+                                <div class="row items-center bR6mEk">
+                                    <label *ngFor="let item of colors" class="color-checkbox col-3" style=" font-size: 22px;">
+                                        <input type="radio" (change)="selectedColor($event)" name="colorId" value="{{item.id}}" class="color-checkbox-input" #colorRadio> {{item.name}}
+                                    </label>
+                                </div>
+                            </section>
+
+                            <section *ngIf="showColorSection" class="flex items-center" style="margin-bottom: 20px; align-items: baseline;">
+                                <h3 class="oN9nMU" style="color: black;">Size</h3>
+                                <div class="row items-center bR6mEk">
+                                    <label *ngFor="let item of sizes" class="color-checkbox col-3" style=" font-size: 22px;">
+                                        <input type="radio" name="sizeId" (change)="getProductDetail($event)" value="{{item.id}}" class="color-checkbox-input"> {{item.size}}
+                                    </label>
+                                </div>
+                            </section>
+
+                            <p *ngIf="showPrice" style="font-size: 24px;">
+                                Giá: <strong style=" color: #ee4d2d;">{{productdetail?.price| currency:'VND' }}</strong>
+                            </p>
+                            <div *ngIf="showPrice" style="font-size: 24px;">
+                               <div *ngIf="productdetail && productdetail.amount !== undefined && productdetail.amount > 0">
+                                Số lượng còn: <strong style=" color: #ee4d2d;">{{productdetail?.amount| number }}</strong>
+                               </div>
+                                <p *ngIf="productdetail.type==0" style=" font-size: 25px;color: #ee4d2d">
+                                  Biến thể ngừng kinh doanh
+                                </p>
+                              <div *ngIf="productdetail?.amount==0">
+                                  Sản phẩm tạm thời hết hàng
+                              </div>
+                            </div>
+
+
+                            <style>
+                                .color-checkbox {
+                                    padding: 5px;
+                                    font-size: 20px;
+                                }
+
+                                .color-checkbox-input {
+                                    /* Bổ sung các quy tắc kiểu checkbox nếu cần thiết */
+                                }
+
+                                .hUWqqt {
+                                    /* Bổ sung các quy tắc kiểu nút màu nếu cần thiết */
+                                }
+                            </style>
+
+
+                            <script>
+                                function handleCheckboxChange(checkboxId) {
+                                    const checkboxes = document.querySelectorAll('.color-checkbox-input');
+                                    checkboxes.forEach((checkbox) => {
+                                        if (checkbox.id !== checkboxId) {
+                                            checkbox.checked = false;
+                                        }
+                                    });
+                                }
+                            </script>
+
+                            <div class="ps-product__shopping">
+                                <a class="ps-btn ps-btn--black" (click)="addCart()" href="javascript:void(0);" >Thêm Giỏ Hàng</a>
+                                <a class="ps-btn ps-btn--black" (click)="muaNgay()" href="javascript:void(0);">Mua Ngay</a>
+
+                                 <!-- <div class="cssyt" style="color: coral;">Yêu thích</div> -->
+<!--
+                                    <a href="javascript:void(0);" (click)="toggleLike(product.id)" data-toggle="tooltip" data-placement="top" title="Yêu Thích">
+                                      <i class="icon-heart1" [ngClass]="{ 'liked': productLikes[product.id] }"></i>
+                                    </a> -->
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div >
+                      <ul class="ps-tab-list">
+                          <li class="active"><a href="javascript:void(0);">Mô tả sản phẩm</a></li>
+                      </ul>
+                      <div class="ps-tab active" id="tab-1">
+                            <p style="font-size: 18 px;">{{product.description}}</p>
+                      </div>
+                  </div>
+                </div>
+            </div>
+
+
+            <div class="ps-page__right">
+                <aside class="widget widget_product widget_features">
+                    <p><i class="icon-network"></i> Vận chuyển toàn quốc</p>
+                    <p><i class="icon-3d-rotate"></i> Hoàn trả miễn phí trong 7 ngày nếu đủ điều kiện</p>
+                    <p><i class="icon-receipt"></i> Nhà cung cấp đưa ra hóa đơn cho sản phẩm này</p>
+                    <p><i class="icon-credit-card"></i> Thanh toán trực tuyến hoặc khi nhận hàng</p>
+                </aside>
+
+                <aside class="widget widget_sell-on-site">
+                    <p><i class="icon-store"></i> Bán trên web?<a *ngIf="isLoggedOut" (click)="checklogindk()" [style.color]="'blue'"> Đăng ký ngay !</a></p>
+                </aside>
+
+
+
+                <aside class="widget widget_ads"><a href="#"><img src="img/ads/1.png" alt=""></a></aside>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- star -->
+<ng-template #t let-fill="fill">
+    <span class="star" [class.full]="fill === 100" style="font-size: 90%;">
+        <span class="half" [style.width.%]="fill">
+            <i class="fa fa-star"></i>
+        </span>
+        <i class="fa fa-star"></i>
+    </span>
+</ng-template>

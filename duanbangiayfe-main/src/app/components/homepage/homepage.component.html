@@ -1,0 +1,97 @@
+<meta charset="utf-8">
+
+<div id="homepage-1">
+    <div class="ps-home-banner ps-home-banner--1">
+        <div class="ps-container">
+            <div class="ps-section__left">
+                <a class="ps-collection" href="javascript:void(0);"><img src="img/slider/home-1/12.png" height="415px" alt=""></a>
+            </div>
+            <div class="ps-section__right">
+                <a class="ps-collection" href="javascript:void(0);"><img src="img/slider/home-1/promotion-7.png" height="193px" width="390" alt=""></a>
+                <a class="ps-collection" href="javascript:void(0);"><img src="img/slider/home-1/promotion-8.png" height="193px" width="390" alt=""></a>
+            </div>
+        </div>
+    </div>
+    <div class="ps-home-ads">
+        <div class="ps-container">
+            <div class="row">
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 "><a class="ps-collection" href="javascript:void(0);"><img src="img/collection/home-1/8.png" alt=""></a>
+                </div>
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 "><a class="ps-collection" href="javascript:void(0);"><img src="img/collection/home-1/11.png" alt=""></a>
+                </div>
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 "><a class="ps-collection" href="javascript:void(0);"><img src="img/collection/home-1/14.png" alt=""></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br><br><br>
+
+    <div class="row" style="min-height: 700px !important;" *ngIf="isLoading">
+        <div class="spinner-border text-warning" role="status" style="margin: auto; width: 6em;height: 6em;"></div>
+    </div>
+
+
+    <div class="row" *ngIf="!isLoading">
+        <div class="ps-container">
+            <div class="ps-section__header" style="background-color: #e3e3e3; padding-top: 8px;">
+                <h3 style="text-align: center; font-size: 30px;">SẢN PHẨM</h3>
+            </div>
+            <br>
+            <div class="ps-section__content">
+                <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig">
+                    <div ngxSlickItem *ngFor="let item of products.data | paginate: { itemsPerPage: 8, currentPage: 0}" class="slide ">
+                        <div class="ps-product border border-1">
+                            <div class="ps-product__thumbnail">
+                                <a href="javascript:void(0);">
+
+                                    <img [src]="'http://localhost:8080/product/' + item.imageId + '/image'" [alt]="item.productName" [ngClass]="{'thumbnail-image': true}">
+
+                                    <img  [routerLink]="['/product-detail/'+item.id]" alt="" />
+                                </a>
+
+                            </div>
+
+                            <div class="ps-product__content">
+                                <a class="ps-product__title" [routerLink]="['/product-detail/'+item.id]" style="text-align: center; font-size: 20px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">{{item.productName}}</a>
+                                <div class="ps-product__prices">
+                                    <span>{{item.minPrice | currency:'VND'}}</span>
+                                    <span>{{item.maxPrice | currency:'VND'}}</span>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+                </ngx-slick-carousel>
+            </div>
+        </div>
+    </div>
+
+    <br><br><br>
+
+    <div class="ps-home-ads">
+        <div class="ps-container">
+            <div class="row">
+                <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-12 "><a class="ps-collection" href="javascript:void(0);"><img src="img/collection/home-1/7.jpg" height="435px" alt=""></a>
+                </div>
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 "><a class="ps-collection" href="javascript:void(0);"><img src="img/collection/home-1/6.jpg" alt=""></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="ps-newsletter">
+</div>
+
+<!-- star -->
+<ng-template #t let-fill="fill">
+    <span class="star" [class.full]="fill === 100" style="font-size: 90%;">
+        <span class="half" [style.width.%]="fill">
+            <i class="fa fa-star"></i>
+        </span>
+        <i class="fa fa-star"></i>
+    </span>
+</ng-template>

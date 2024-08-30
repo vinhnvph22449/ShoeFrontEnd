@@ -1,0 +1,150 @@
+<div class="ps-page--simple">
+    <div class="ps-breadcrumb">
+        <div class="container">
+            <ul class="breadcrumb">
+                <li><a [routerLink]="['/home']">Trang chủ</a></li>
+                <li><a  [routerLink]="['/all-product']">Cửa hàng</a></li>
+                <li>Thanh Toán</li>
+            </ul>
+        </div>
+    </div>
+    <div class="ps-checkout ps-section--shopping">
+        <div class="container">
+            <div class="ps-section__header">
+                <h1>Thanh Toán</h1>
+            </div>
+            <div class="ps-section__content">
+                <form class="ps-form--checkout" [formGroup]="postForm">
+                    <div class="row">
+                        <div class="col-xl-7 col-lg-8 col-md-12 col-sm-12  ">
+                            <div class="ps-form__billing-info">
+                                <h3 class="ps-form__heading">Thông tin nhận hàng</h3>
+                                <div class="form-group">
+                                    <label style="font-size: 20px;">Họ và tên <sup>*</sup> : <span >{{customer.name}}</span>
+                                    </label>
+                                    <div class="form-group__content">
+                                        <!-- <input class="form-control" type="text" formControlName="userName" [value]="cart?.user?.name" readonly placeholder="Họ và tên"> -->
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Số điện thoại<sup>*</sup>
+                                    </label>
+                                    <div class="form-group__content">
+                                        <input class="form-control"
+                                        style="font-size: 16px;"
+                                        type="text"
+                                        [ngClass]="{'is-invalid':postForm.get('phone')?.touched && postForm.get('phone')?.invalid}"
+                                        placeholder="Số điện thoại"
+                                        formControlName="phoneNumber"
+                                          [value]="customer.phoneNumber">
+                                        <small class="invalid-feedback">Số điện thoại không hợp lệ</small>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label>Chọn tỉnh thành<sup>*</sup>
+                                    </label>
+                                    <div class="form-group__content">
+                                        <select style="font-size: 16px;" #citySelect class="product-short-select custom-select" id="city" (change)="setProvinceCode($event)" formControlName="city"
+                                        [ngClass]="{'is-invalid':postForm.get('city')?.touched && postForm.get('city')?.invalid}">
+                                            <option value="0" selected disabled>Chọn tỉnh thành</option>
+                                            <option *ngFor="let item of provinces" [attr.data]="item.ProvinceID" [value]="item.ProvinceName">{{item.ProvinceName}}</option>
+                                        </select>
+                                        <small class="invalid-feedback">Hãy chọn tỉnh thành của bạn</small>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Chọn huyện/thành phố <sup>*</sup>
+                                    </label>
+                                    <div class="form-group__content">
+                                        <select style="font-size: 16px;" #districtSelect class="product-short-select custom-select" id="district" (change)="setDistrictCode($event)" formControlName="district"
+                                        [ngClass]="{'is-invalid':postForm.get('district')?.touched && postForm.get('district')?.invalid}">
+                                        <option value="0" selected disabled>Chọn huyện/thành phố</option>
+                                        <option *ngFor="let item of districts" [attr.data]="item.DistrictID" [value]="item.DistrictName">{{item.DistrictName}}</option>
+                                        </select>
+                                        <small class="invalid-feedback">Hãy chọn huyện/thành phố của bạn</small>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Chọn phường/xã<sup>*</sup>
+                                    </label>
+                                    <div class="form-group__content">
+                                        <select style="font-size: 16px;" class="product-short-select custom-select" id="ward" (change)="setWardCode($event)" formControlName="ward" #wardSelect
+                                            [ngClass]="{'is-invalid':postForm.get('ward')?.touched && postForm.get('ward')?.invalid}">
+                                            <option value="0" selected disabled>Chọn phường/xã</option>
+                                            <option *ngFor="let item of wards" [attr.data]="item.WardCode" [value]="item.WardName">{{item.WardName}}</option>
+                                        </select>
+                                        <small class="invalid-feedback">Hãy chọn phường/xã của bạn</small>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Địa chỉ <sup>*</sup>
+                                    </label>
+                                    <div class="form-group__content">
+                                        <input
+                                        class="form-control"
+                                        type="text"
+                                        style="font-size: 16px;"  formControlName="address"
+                                        [ngClass]="{'is-invalid':postForm.get('address')?.touched && postForm.get('address')?.invalid}" placeholder="Địa chỉ">
+                                        <small class="invalid-feedback">Hãy nhập địa chỉ của bạn</small>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-xl-5 col-lg-4 col-md-12 col-sm-12  ">
+                            <div class="ps-form__total">
+                                <h3 class="ps-form__heading">Thông tin đơn hàng</h3>
+                                <div class="content">
+                                    <div class="ps-block--checkout-total">
+                                        <div class="ps-block__content">
+                                            <table class="table ps-block__products">
+                                                <tbody>
+                                                    <tr *ngFor="let item of productsChecked, index as i">
+                                                        <td>
+                                                            <a href="javascript:void(0);"> {{item.productDetail.product.name}} <u style="font-size: 24px;">×</u>   <b style="font-size: 26px;" >{{item.quantity}}</b></a>
+
+                                                            <p>Màu:<strong> {{item.productDetail.color.name}}</strong>  |   Size:<strong> {{item.productDetail.size.size}}</strong> | Giá:<strong> {{item.productDetail.price | currency:'VND'}}</strong>  </p>
+                                                        </td>
+                                                        <td style="font-size: 20px;">{{item.quantity*item.productDetail.price | currency:'VND'}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <h3>Tổng tiền của đơn: <span style="color: red;padding-left: 40px;"> {{totalPrice | currency:'VND'}}</span></h3>
+                                            <h3>Tiền ship: <span style="color: red;padding-left: 40px;"> {{shipFee | currency:'VND'}}</span></h3>
+                                            <h3>Tổng tiền thanh toán: <span style="color: red;padding-left: 40px;"> {{totalPrice+shipFee | currency:'VND'}}</span></h3>
+                                        </div>
+                              <div class="form-group">
+                                <label>Hình thức thanh toán<sup>*</sup>
+                                </label>
+                                <div class="form-group__content">
+                                  <select style="font-size: 16px;" class="product-short-select custom-select"
+                                    formControlName="paymentType" >
+                                    <option value="2"  >Thanh toán VNPay</option>
+                                    <option value="-2" >COD nhận hàng trả tiền</option>
+                                  </select>
+                                </div>
+                              </div>
+                                    </div>
+                                      <div class="form-group">
+                                        <label>Ghi chú đơn hàng</label>
+                                        <div class="form-group__content">
+                                          <textarea style="font-size: 16px;" formControlName="note"  name="note"  class="form-control" rows="3"
+                                            placeholder="Ghi chú về đơn hàng của bạn"></textarea>
+                                        </div>
+                                      </div>
+
+                                    <a class="ps-btn ps-btn--fullwidth" href="javascript:void(0);" (click)="checkOut()" >Xác nhận đặt hàng</a>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
